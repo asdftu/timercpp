@@ -1,9 +1,10 @@
-Fork from 99x/timercpp
+Fork from [99x/timercpp](https://github.com/99x/timercpp)
+
 
 fix the issues which are not fixed
 
-* use templete function instead of 'auto'
-* store the active in static field, avoid invalid memory access when Timer is destroyed
+* use templete function instead of 'auto' [aut is not Allowed #3](https://github.com/99x/timercpp/issues/3)
+* store the active in static field, avoid invalid memory access when Timer is destroyed [Read access violation after leaving scope #5](https://github.com/99x/timercpp/issues/5)
 * add lock for thread-safe
 
 
