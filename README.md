@@ -20,47 +20,20 @@ This header only library has js equivalent `setTimeout()` and `setInterval()` fo
 
 ```c++
 Timer t = Timer();
-t.setTimeout([&]() {
+auto id = t.setTimeout([&]() {
     cout << "Hey.. After 1s." << endl;
 }, 1000); 
+//t.stop(id);
 ```
 
 ## `setInterval(auto function, int interval)`
 
 ```c++
 Timer t = Timer();
-t.setInterval([&]() {
+auto id = t.setInterval([&]() {
     cout << "Hey.. After each 1s..." << endl;
 }, 1000); 
-```
-
-## Sample Program
-
-```c++
-#include <iostream>
-#include "timercpp.h"
-
-using namespace std;
-
-int main() {
-    Timer t = Timer();
-
-    t.setInterval([&]() {
-        cout << "Hey.. After each 1s..." << endl;
-    }, 1000); 
-
-    t.setTimeout([&]() {
-        cout << "Hey.. After 5.2s. But I will stop the timer!" << endl;
-        t.stop();
-    }, 5200); 
-
-    
-
-    cout << "I am Timer" <<endl;
-
-
-    while(true); // Keep main thread active
-}
+//t.stop(id);
 ```
 
 **Output**
@@ -78,7 +51,7 @@ Hey.. After 5.2s. But I will stop the timer!
 ### How to compile sample program?
 
 ```bash
-g++ sample.cpp -std=c++14 -pthread
+g++ sample.cpp timer.cpp -std=c++11
 ```
 
 ### License
