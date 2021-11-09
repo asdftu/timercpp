@@ -1,3 +1,13 @@
+Fork from 99x/timercpp
+
+fix the issues which are not fixed
+
+* use templete function instead of 'auto'
+* store the active in static field, avoid invalid memory access when Timer is destroyed
+* add lock for thread-safe
+
+
+
 # timercpp
 Javascript like timer for c++ developers
 
