@@ -1,12 +1,15 @@
 #pragma once
+
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <map>
+#include <mutex>
 #include <atomic>
 
 class Timer {
     static uint64_t index;
-    static std::map<uint64_t, bool> active_map;
+    static std::map<uint64_t, std::atomic<bool>> active_map;
     static std::mutex mutex;
 
 public:
@@ -16,10 +19,6 @@ public:
     uint64_t setInterval(Function function, int interval);
     void stop(const uint64_t& id);
 };
-
-uint64_t Timer::index = 100;
-std::map<uint64_t,bool> Timer::active_map;
-std::mutex Timer::mutex;
 
 
 template<typename Function>
@@ -47,7 +46,7 @@ uint64_t Timer::setInterval(Function function, int interval) {
     index++;
     auto& active = active_map[id];
     std::thread t([function, interval, &active]() {
-        while (active.load()) {
+        while (active) {
             std::this_thread::sleep_for(std::chrono::milliseconds(interval));
             if (!active.load()) return;
             function();
