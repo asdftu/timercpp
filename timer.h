@@ -1,5 +1,4 @@
-#ifndef TIMER_BOOST_H
-#define TIMER_BOOST_H
+#pragma once
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -66,5 +65,3 @@ void Timer::stop(const uint64_t& id) {
     }
 }
 
-
-#endif // TIMER_BOOST_H
