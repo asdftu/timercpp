@@ -10,9 +10,10 @@ int main() {
         cout << "Hey.. After each 1s..." << endl;
     }, 1000); 
 
-    t.setTimeout([&]() {
+    uint64_t id;
+    id = t.setTimeout([&]() {
         cout << "Hey.. After 5.2s. But I will stop the timer!" << endl;
-        t.stop();
+        t.stop(id);
     }, 5200); 
 
     
