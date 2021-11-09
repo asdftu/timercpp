@@ -5,6 +5,7 @@
 #include <chrono>
 #include <map>
 #include <mutex>
+#include <vector>
 #include <atomic>
 
 class Timer {
@@ -13,18 +14,36 @@ class Timer {
     static std::mutex mutex;
 
 public:
+    Timer() {}
+    virtual ~Timer();
+    Timer(const Timer& t) = delete;
+    Timer operator =(const Timer& t) = delete;
+
+
+public:
     template<typename Function>
     uint64_t setTimeout(Function function, int delay);
     template<typename Function>
     uint64_t setInterval(Function function, int interval);
     void stop(const uint64_t& id);
+private:
+    std::vector<uint64_t> ids;
 };
+
+Timer::~Timer()
+{
+    for (auto& id : ids)
+    {
+        stop(id);
+    }
+}
 
 
 template<typename Function>
 uint64_t Timer::setTimeout(Function function, int delay) {
     std::lock_guard<std::mutex> lock(mutex);
     const uint64_t id = index;
+    ids.push_back(id);
     active_map.insert(make_pair(id, true));
     index++;
     auto& active = active_map[id];
@@ -42,11 +61,12 @@ template<typename Function>
 uint64_t Timer::setInterval(Function function, int interval) {
     std::lock_guard<std::mutex> lock(mutex);
     const uint64_t id = index;
+    ids.push_back(id);
     active_map.insert(make_pair(id, true));
     index++;
     auto& active = active_map[id];
     std::thread t([function, interval, &active]() {
-        while (active) {
+        while (active.load()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(interval));
             if (!active.load()) return;
             function();
@@ -63,4 +83,5 @@ void Timer::stop(const uint64_t& id) {
         active_map[id] = false;
     }
 }
+
 
